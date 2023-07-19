@@ -1,14 +1,33 @@
-class LinkedList<T> {
+interface ILinkedList<T> {
+  last: NodeTemp<T> | null;
+  first: NodeTemp<T> | null;
+  removeFirst(): void;
+  removeLast(): void;
+  addFirst(element: T): void;
+  addLast(element: T): void;
+  indexOf(element: T): number;
+  contains(element: T): boolean;
+  size(): number;
+  toArray(): T[];
+  reverse(): void;
+  getKthFromTheEnd(k: number): T;
+}
+interface INodeTemp<T> {
+  next: NodeTemp<T> | null;
+  value: T;
+}
+
+class LinkedList<T> implements ILinkedList<T> {
   public last: NodeTemp<T> | null = null;
   public first: NodeTemp<T> | null = null;
-  private count: number;
+  private _count: number;
 
   constructor(...items: T[]) {
-    this.count = items.length;
+    this._count = items.length;
 
     let current: NodeTemp<T> | null = null;
 
-    for (let i: number = 0; i < this.count; i++) {
+    for (let i: number = 0; i < this._count; i++) {
       let node: NodeTemp<T> = new NodeTemp(items[i]);
       if (i === 0) {
         this.first = node;
@@ -17,13 +36,13 @@ class LinkedList<T> {
         current!.next = node;
         current = current!.next;
       }
-      if (i === this.count - 1) this.last = node;
+      if (i === this._count - 1) this.last = node;
     }
   }
 
   // runtime complexity = O(1)
   public removeFirst(): void {
-    this.count ? this.count-- : this.count;
+    this._count ? this._count-- : this._count;
 
     if (this.isEmpty()) throw new Error("there is no item to remove");
 
@@ -38,7 +57,7 @@ class LinkedList<T> {
   }
   // runtime complexity = O(n)
   public removeLast(): void {
-    this.count ? this.count-- : this.count;
+    this._count ? this._count-- : this._count;
 
     if (this.isEmpty()) throw new Error("there is no item to remove");
 
@@ -54,7 +73,7 @@ class LinkedList<T> {
   }
   // runtime complexity = O(1)
   public addFirst(element: T): void {
-    this.count++;
+    this._count++;
 
     let node: NodeTemp<T> = new NodeTemp(element);
 
@@ -68,7 +87,7 @@ class LinkedList<T> {
   }
   // runtime complexity = O(1)
   public addLast(element: T): void {
-    this.count++;
+    this._count++;
 
     let node: NodeTemp<T> = new NodeTemp(element);
 
@@ -97,11 +116,11 @@ class LinkedList<T> {
   }
   // runtime complexity = O(1) <<with this method>>
   public size(): number {
-    return this.count;
+    return this._count;
   }
   // runtime complexity = O(n)
   public toArray(): T[] {
-    let array: T[] = new Array<T>(this.count);
+    let array: T[] = new Array<T>(this._count);
     let current: NodeTemp<T> | null = this.first;
     let index: number = 0;
     while (current) {
@@ -156,7 +175,7 @@ class LinkedList<T> {
   }
 }
 
-class NodeTemp<T> {
+class NodeTemp<T> implements INodeTemp<T> {
   public next: NodeTemp<T> | null = null;
   constructor(public value: T) {}
 }
