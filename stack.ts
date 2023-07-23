@@ -11,13 +11,12 @@ interface IExpression {
   isBalanced(string: string): boolean;
 }
 
-// default size = 5
-class Stack<T> implements IStack<T> {
+export default class Stack<T> implements IStack<T> {
   private _items: T[];
   private _count: number = 0;
 
   constructor(length?: number) {
-    this._items = new Array(length || 5);
+    this._items = new Array<T>(length || 5);
   }
 
   // runtime complexity = O(1)
@@ -44,6 +43,7 @@ class Stack<T> implements IStack<T> {
   }
 }
 
+// default capacity = 5
 const newStack: Stack<string> = new Stack();
 
 // string revresing
