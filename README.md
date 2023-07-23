@@ -13,3 +13,7 @@ in this file LinkedList data structure implemented with typescript, altough in t
 # stack
 
 in stack.ts file, Stack data structure implemented, also by using this data structure and its feature, i implemented a class which has a method that reversing any string, in the following we can see class Expression, in this class exists "isBalanced" method, this method receive a string and validate every open marks in the string (like: "<", "(", ...) to have their corresponding close marks
+
+# queue
+
+in queue.ts file, Queue data structure implemented by using different data structures like Array and Stack; also PriorityQueue is an abstraction implementation of queue concept which is receives numbers and organize these numbers in ascending order; finally there is a practice for reversing ArrayQueue and QueueWithTwoStacks
