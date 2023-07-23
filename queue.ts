@@ -22,7 +22,7 @@ class ArrayQueue<T> implements IQueue<T> {
 
   // runtime complexity = O(1)
   enqueue(item: T): void {
-    if (this._count === this._capacity)
+    if (this.isFull())
       throw new Error("the queue has no more capacity to add item");
     this._items[this._rear] = item;
     this._rear = (this._rear + 1) % this._capacity;
@@ -30,7 +30,7 @@ class ArrayQueue<T> implements IQueue<T> {
   }
   // runtime complexity = O(1)
   dequeue(): T {
-    if (this._count === 0) throw new Error("the queue is empty");
+    if (this.isEmpty()) throw new Error("the queue is empty");
     const frontElement: T = this._items[this._front];
     this._front = (this._front + 1) % this._capacity;
     this._count--;
@@ -38,18 +38,16 @@ class ArrayQueue<T> implements IQueue<T> {
   }
   // runtime complexity = O(1)
   peek(): T {
-    if (this._count === 0) throw new Error("the queue is empty");
+    if (this.isEmpty()) throw new Error("the queue is empty");
     return this._items[this._front];
   }
   // runtime complexity = O(1)
   isFull(): boolean {
-    if (this._count === this._capacity) return true;
-    return false;
+    return this._count === this._capacity;
   }
   // runtime complexity = O(1)
   isEmpty(): boolean {
-    if (this._count > 0) return false;
-    return true;
+    return this._count === 0;
   }
   get capacity(): number {
     return this._capacity;
@@ -61,8 +59,8 @@ class QueueWithTwoStacks<T> implements IQueue<T> {
   private _stack2: Stack<T>;
   private _count: number = 0;
   constructor(private _capacity: number = 5) {
-    this._stack1 = new Stack<T>(this._capacity);
-    this._stack2 = new Stack<T>(this._capacity);
+    this._stack1 = new Stack(this._capacity);
+    this._stack2 = new Stack(this._capacity);
   }
   // runtime complexity : O(1)
   enqueue(item: T): void {
@@ -79,15 +77,18 @@ class QueueWithTwoStacks<T> implements IQueue<T> {
     this._count--;
     return this._stack2.pop();
   }
+  // runtime complexity : O(n)
   peek(): T {
     if (this.isEmpty()) throw new Error("the queue is empty");
     if (this._stack2.isEmpty())
       while (!this._stack1.isEmpty()) this._stack2.push(this._stack1.pop());
     return this._stack2.peek();
   }
+  // runtime complexity : O(1)
   isFull(): boolean {
     return this._count === this._capacity;
   }
+  // runtime complexity : O(1)
   isEmpty(): boolean {
     return this._stack1.isEmpty() && this._stack2.isEmpty();
   }
@@ -103,6 +104,7 @@ class PriorityQueue implements IQueue<number> {
   constructor(private _capacity: number = 5) {
     this._items = new Array<number>(_capacity);
   }
+  // runtime complexity : O(n)
   enqueue(item: number): void {
     if (this.isFull())
       throw new Error("the queue has no more capacity to add item");
@@ -114,17 +116,21 @@ class PriorityQueue implements IQueue<number> {
     this._items[i + 1] = item;
     this._count++;
   }
+  // runtime complexity : O(1)
   dequeue(): number {
     if (this.isEmpty()) throw new Error("the queue is empty");
     return this._items[--this._count];
   }
+  // runtime complexity : O(1)
   peek(): number {
     if (this.isEmpty()) throw new Error("the queue is empty");
     return this._items[this._count - 1];
   }
+  // runtime complexity : O(1)
   isFull(): boolean {
     return this._count === this._capacity;
   }
+  // runtime complexity : O(1)
   isEmpty(): boolean {
     return this._count === 0;
   }
@@ -135,7 +141,7 @@ class PriorityQueue implements IQueue<number> {
 // queue reversing - guide : "reverse()" is a static method and receive a queue as input
 class QueueReverser {
   static reverse<T>(queue: ArrayQueue<T> | QueueWithTwoStacks<T>): void {
-    let stack: Stack<any> = new Stack(queue.capacity);
+    let stack: Stack<T> = new Stack(queue.capacity);
     while (!queue.isEmpty()) stack.push(queue.dequeue());
     while (!stack.isEmpty()) queue.enqueue(stack.pop());
   }

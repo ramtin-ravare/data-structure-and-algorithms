@@ -15,8 +15,8 @@ export default class Stack<T> implements IStack<T> {
   private _items: T[];
   private _count: number = 0;
 
-  constructor(length?: number) {
-    this._items = new Array<T>(length || 5);
+  constructor(length: number = 5) {
+    this._items = new Array<T>(length);
   }
 
   // runtime complexity = O(1)
