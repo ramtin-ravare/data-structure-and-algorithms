@@ -17,3 +17,7 @@ in stack.ts file, Stack data structure implemented, also by using this data stru
 # queue
 
 in queue.ts file, Queue data structure implemented by using different data structures like Array and Stack; also PriorityQueue is an abstraction implementation of queue concept which is receives numbers and organize these numbers in ascending order; finally there is a practice for reversing ArrayQueue and QueueWithTwoStacks
+
+# hash-table
+
+in hash-table.ts file, HashTable data structure implemented which is accept number keys and string values, in the following, CharFinder class has 2 static methods for finding first repetitive and non-repetitve characters of a string, findFirstNonRepetitiveChar method is using Map class (which is a native javascript implementation for HashTable data structure) for finding first non-repetitive character, findFirstRepetitiveChar method is using Set class (which is a native javascript implementation for Set data structure) for finding first repetitive character.
