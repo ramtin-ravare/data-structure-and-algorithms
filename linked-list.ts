@@ -3,21 +3,26 @@ interface ILinkedList<T> {
   first: NodeTemp<T> | null;
   removeFirst(): void;
   removeLast(): void;
+  removeByIndex(index: number): void;
   addFirst(element: T): void;
   addLast(element: T): void;
+  addAt(element: T, index: number): void;
   indexOf(element: T): number;
   contains(element: T): boolean;
   size(): number;
   toArray(): T[];
   reverse(): void;
   getKthFromTheEnd(k: number): T;
+  changeValueByIndex(index: number, value: T): void;
+  getValueByIndex(index: number): T;
+  getNodeByIndex(index: number): NodeTemp<T> | null;
 }
 interface INodeTemp<T> {
   next: NodeTemp<T> | null;
   value: T;
 }
 
-class LinkedList<T> implements ILinkedList<T> {
+export default class LinkedList<T> implements ILinkedList<T> {
   public last: NodeTemp<T> | null = null;
   public first: NodeTemp<T> | null = null;
   private _count: number;
@@ -51,7 +56,7 @@ class LinkedList<T> implements ILinkedList<T> {
       this.last = null;
       return;
     }
-    let second = this.first!.next;
+    let second: NodeTemp<T> | null = this.first!.next;
     this.first!.next = null;
     this.first = second;
   }
@@ -67,9 +72,32 @@ class LinkedList<T> implements ILinkedList<T> {
       return;
     }
 
-    let previous = this.getPrevious();
+    let previous: NodeTemp<T> | null = this.getPreviousTheLast();
     previous!.next = null;
     this.last = previous;
+  }
+  // runtime complexity = O(n)
+  public removeByIndex(index: number): void {
+    this.checkIndex(index);
+
+    if (this.first === this.last) {
+      this.first = null;
+      this.last = null;
+      this._count--;
+      return;
+    }
+
+    if (index === 0) {
+      this.first = this.first!.next;
+      this._count--;
+      return;
+    }
+
+    let previous: NodeTemp<T> | null = this.getPreviousTheIndex(index);
+    let current: NodeTemp<T> | null = this.getNodeByIndex(index);
+    previous!.next = current!.next;
+    if (index === this._count - 1) this.last = previous;
+    this._count--;
   }
   // runtime complexity = O(1)
   public addFirst(element: T): void {
@@ -100,11 +128,34 @@ class LinkedList<T> implements ILinkedList<T> {
     }
   }
   // runtime complexity = O(n)
+  public addAt(element: T, index: number): void {
+    this._count++;
+    this.checkIndex(index);
+
+    if (index === 0) {
+      this.addFirst(element);
+      this._count--;
+      return;
+    }
+    if (this._count - 1 === index) {
+      this.addLast(element);
+      this._count--;
+      return;
+    }
+
+    let node: NodeTemp<T> = new NodeTemp(element);
+    let previous: NodeTemp<T> | null = this.getPreviousTheIndex(index);
+    let current: NodeTemp<T> | null = this.getNodeByIndex(index);
+    node.next = current;
+    previous!.next = node;
+  }
+  // runtime complexity = O(n)
   public indexOf(element: T): number {
     let index: number = 0;
     let current: NodeTemp<T> | null = this.first;
     while (current) {
-      if (current!.value === element) return index;
+      if (JSON.stringify(current!.value) === JSON.stringify(element))
+        return index;
       current = current.next;
       index++;
     }
@@ -147,13 +198,19 @@ class LinkedList<T> implements ILinkedList<T> {
   }
   // runtime complexity = O(n)
   public getKthFromTheEnd(k: number): T {
-    if (k <= 0) throw new Error("argument should be more than 0 ");
+    if (k <= 0) throw new Error("argument should be an integer more than 0 ");
+    if (k !== Math.trunc(k))
+      throw new Error(
+        `argument should be an integer between 1 to ${this._count} `
+      );
     let a: NodeTemp<T> | null = this.first;
     let b: NodeTemp<T> | null = this.first;
     for (let i: number = 0; i < k - 1; i++) {
       b = b!.next;
       if (b === null)
-        throw new Error("argument is more than the length of LinkedList");
+        throw new Error(
+          `argument is more than the length of LinkedList, it should be an integer between 1 to ${this._count} `
+        );
     }
     while (b !== this.last) {
       a = a!.next;
@@ -161,8 +218,40 @@ class LinkedList<T> implements ILinkedList<T> {
     }
     return a!.value;
   }
+  // runtime complexity = O(n)
+  public changeValueByIndex(index: number, value: T): void {
+    this.checkIndex(index);
 
-  private getPrevious(): NodeTemp<T> | null {
+    let a: NodeTemp<T> | null = this.first;
+    for (let i: number = 0; i < index; i++) a = a!.next;
+    a!.value = value;
+  }
+  // runtime complexity = O(n)
+  public getValueByIndex(index: number): T {
+    this.checkIndex(index);
+
+    let a: NodeTemp<T> | null = this.first;
+    for (let i: number = 0; i < index; i++) a = a!.next;
+    return a!.value;
+  }
+  // runtime complexity = O(n)
+  public getNodeByIndex(index: number): NodeTemp<T> | null {
+    this.checkIndex(index);
+
+    let a: NodeTemp<T> | null = this.first;
+    for (let i: number = 0; i < index; i++) a = a!.next;
+    return a;
+  }
+
+  private getPreviousTheIndex(index: number): NodeTemp<T> | null {
+    let current: NodeTemp<T> | null = this.first;
+    while (current) {
+      if (current!.next === this.getNodeByIndex(index)) return current;
+      current = current!.next;
+    }
+    return null;
+  }
+  private getPreviousTheLast(): NodeTemp<T> | null {
     let current: NodeTemp<T> | null = this.first;
     while (current) {
       if (current!.next === this.last) return current;
@@ -172,6 +261,30 @@ class LinkedList<T> implements ILinkedList<T> {
   }
   private isEmpty(): boolean {
     return this.first === null;
+  }
+  private checkIndex(index: number): void {
+    if (index > this._count - 1)
+      throw new Error(
+        this._count - 1 <= 0
+          ? "index only can be 0"
+          : "index is more than the length of LinkedList, it should be an integer between " +
+            0 +
+            " to " +
+            (this._count - 1)
+      );
+    if (index < 0)
+      throw new Error(
+        this._count - 1 <= 0
+          ? "index only can be 0"
+          : "index should be an integer between " +
+            0 +
+            " to " +
+            (this._count - 1)
+      );
+    if (index !== Math.trunc(index))
+      throw new Error(
+        "index should be an integer between " + 0 + " to " + (this._count - 1)
+      );
   }
 }
 
