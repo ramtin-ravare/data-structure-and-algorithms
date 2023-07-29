@@ -21,3 +21,7 @@ in queue.ts file, Queue data structure implemented by using different data struc
 # hash-table
 
 in hash-table.ts file, HashTable data structure implemented which is accept number keys and string values, chaining technique has used for resolving collisions, in the following, CharFinder class has 2 static methods for finding first repetitive and non-repetitve characters of a string, findFirstNonRepetitiveChar method is using Map class (which is a native javascript implementation for HashTable data structure) for finding first non-repetitive character, findFirstRepetitiveChar method is using Set class (which is a native javascript implementation for Set data structure) for finding first repetitive character.
+
+# tree
+
+Tree data structure has various types and Tree class in tree.ts file, is a simple implementation of Binary Search Tree (BST), this class has 2 methods to insert and find nodes, BST major advantage is O(log n) runtime complexity for its different operations (like insert, find, remove), in the following, different methods have implemented for traversing BST in level order, preorder, inorder and postorder ways, and finally there is some helper methods for calculating the tree height, equality examination of 2 trees and finding the minimum amount in the tree, except find and insert methods, other methods are using recursion technique to traverse nodes.
