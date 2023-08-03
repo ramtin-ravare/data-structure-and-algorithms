@@ -80,8 +80,8 @@ class AVLTree implements IAVLTree {
     return node;
   }
   private rotateLeft(root: AVLNode): AVLNode {
+    // this line and next if statement are for resolving type annotation problem and in semantical way if statement is exacuting all the time
     let newRoot: AVLNode = new AVLNode(0);
-
     if (root.rightChild) {
       newRoot = root.rightChild;
       root.rightChild = newRoot.leftChild;
@@ -93,8 +93,8 @@ class AVLTree implements IAVLTree {
     return newRoot;
   }
   private rotateRight(root: AVLNode): AVLNode {
+    // this line and next if statement are for resolving type annotation problem and in semantical way if statement is exacuting all the time
     let newRoot: AVLNode = new AVLNode(0);
-
     if (root.leftChild) {
       newRoot = root.leftChild;
       root.leftChild = newRoot.rightChild;
