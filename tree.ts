@@ -20,7 +20,7 @@ interface INodeTemp {
 class Tree implements ITree {
   private _root: NodeTemp | null = null;
 
-  // runtime complexity : O(log n)
+  // runtime complexity : O(n)
   public insert(item: number): void {
     let node: NodeTemp = new NodeTemp(item);
     if (!this._root) {
@@ -45,7 +45,7 @@ class Tree implements ITree {
       }
     }
   }
-  // runtime complexity : O(log n)
+  // runtime complexity : O(n)
   public find(item: number): boolean {
     let current: NodeTemp | null = this._root;
     while (current) {
@@ -84,12 +84,12 @@ class Tree implements ITree {
     if (!this._root) throw new Error("tree is empty");
     return this.pHeight(this._root);
   }
-  // runtime complexity : O(log n)
+  // runtime complexity : O(n)
   public minInBSTWithRecursion(): number {
     if (!this._root) throw new Error("tree is empty");
     return this.pMinInBSTWithRecursion(this._root);
   }
-  // runtime complexity : O(log n)
+  // runtime complexity : O(n)
   public minInBSTWithLoop(): number {
     if (!this._root) throw new Error("tree is empty");
     let current: NodeTemp | null = this._root;
